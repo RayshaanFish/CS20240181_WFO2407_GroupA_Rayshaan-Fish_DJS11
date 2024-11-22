@@ -11,6 +11,7 @@ import "./App.css";
 import Header from "./components/Header";
 import Body from "./components/Body";
 import Footer from "./components/Footer";
+import ShowDetail from "./pages/ShowDetail";
 
 function App() {
   return (
@@ -22,10 +23,7 @@ function App() {
             <Routes>
               {/* Routes for different pages */}
               <Route path="/" element={<Body />} />
-              <Route
-                path="/about"
-                element={<p>Still need to add this Page [ABOUT]</p>}
-              />
+              <Route path="/show/:id" element={<ShowDetail />} />
               <Route
                 path="/search"
                 element={<p>Still need to add this Page [SEARCH]</p>}

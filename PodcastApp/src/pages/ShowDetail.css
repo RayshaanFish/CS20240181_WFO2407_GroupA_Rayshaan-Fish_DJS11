@@ -1,0 +1,30 @@
+css Copy code .show {
+  padding: 1rem;
+  text-align: center;
+}
+
+.podcast-detail-image {
+  max-width: 100%;
+  height: auto;
+  margin: 1rem 0;
+}
+
+.show h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.show p {
+  font-size: 1rem;
+  margin: 0.5rem 0;
+}
+
+.show a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.show a:hover {
+  text-decoration: underline;
+}
