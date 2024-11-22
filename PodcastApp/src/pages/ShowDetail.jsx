@@ -3,10 +3,11 @@ import { useParams } from "react-router-dom";
 import "../pages/ShowDetail.css";
 
 function ShowDetail() {
-  const { id } = useParams(); // Get podcast ID from the URL
+  const { id } = useParams();
   const [podcast, setPodcast] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedSeason, setSelectSeason] = useState(null); //NOTE TO SELF :: should this be 1?
 
   useEffect(() => {
     const apiUrl = `https://podcast-api.netlify.app/id/${id}`;
@@ -20,6 +21,7 @@ function ShowDetail() {
       })
       .then((data) => {
         setPodcast(data);
+        setSelectSeason(data.seasons[0]);
         setLoading(false);
       })
       .catch((err) => {
@@ -27,6 +29,14 @@ function ShowDetail() {
         setLoading(false);
       });
   }, [id]);
+
+  const chooseSeason = (event) => {
+    const seasonNumber = parseInt(event.target.value, 10);
+    const selected = podcast.seasons.find(
+      (season) => season.season === seasonNumber
+    );
+    setSelectSeason(selected);
+  };
 
   if (loading) return <p>Loading podcast details...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -41,11 +51,39 @@ function ShowDetail() {
       />
       <p>{podcast.description}</p>
       <p>
-        <strong>Publisher:</strong> {podcast.publisher}
+        <strong>Last Updated:</strong> {podcast.updated}
       </p>
-      <a href={podcast.link} target="_blank" rel="noopener noreferrer">
-        Listen to the Podcast
-      </a>
+
+      <label htmlFor="season-select">Select Season: </label>
+      <select
+        id="season-select"
+        onChange={chooseSeason}
+        value={selectedSeason?.season || ""}
+      >
+        {podcast.seasons.map((season) => (
+          <option key={season.season} value={season.season}>
+            {season.title}
+          </option>
+        ))}
+      </select>
+
+      {selectedSeason && (
+        <div className="episodes">
+          <h2>{selectedSeason.title}</h2>
+          {selectedSeason.episodes.map((episode, index) => (
+            <div key={index} className="episode-card">
+              <h3>
+                Episode {episode.episode}: {episode.title}
+              </h3>
+              <p>{episode.description}</p>
+              <audio controls>
+                <source src={episode.file} type="audio/mpeg" />
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -28,3 +28,38 @@ css Copy code .show {
 .show a:hover {
   text-decoration: underline;
 }
+
+.show-detail {
+  padding: 1rem;
+  text-align: center;
+}
+
+.podcast-detail-image {
+  max-width: 100%;
+  height: auto;
+  margin: 1rem 0;
+}
+
+.show-detail select {
+  margin: 1rem 0;
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+.episodes {
+  margin-top: 2rem;
+  text-align: left;
+}
+
+.episode-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+  background-color: #f9f9f9;
+}
+
+.episode-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
