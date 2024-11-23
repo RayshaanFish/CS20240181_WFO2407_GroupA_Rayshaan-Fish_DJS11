@@ -22,7 +22,9 @@ function ShowDetail() {
       })
       .then((data) => {
         setPodcast(data);
-        setSelectSeason(data.seasons[0]);
+        if (data.seasons.length > 0) {
+          setSelectSeason(data.seasons[0]); //first season default
+        }
         setLoading(false);
       })
       .catch((err) => {
@@ -54,10 +56,8 @@ function ShowDetail() {
         className="podcast-detail-image"
       />
       <p>{podcast.description}</p>
-      <p>
-        <strong>Last Updated:</strong> {podcast.updated}
-      </p>
 
+      {/* season drop down */}
       <label htmlFor="season-select">Select Season: </label>
       <select
         id="season-select"
@@ -70,6 +70,31 @@ function ShowDetail() {
           </option>
         ))}
       </select>
+
+      <p>
+        <strong>Last Updated:</strong> {podcast.updated}
+      </p>
+
+      {/* Season + Episode count */}
+      <div className="season-info">
+        <p>
+          <strong>Total Seasons:</strong> {podcast.seasons.length}
+        </p>
+        <p>
+          Number of Episodes this Season:{" "}
+          {selectedSeason ? selectedSeason.episodes.length : 0}
+        </p>
+      </div>
+
+      {/* Episode list - NOTE TO SELF not sure if I want this */}
+      <div className="episodes-list">
+        <h2>{selectedSeason.title}</h2>
+        {selectedSeason.episodes.map((episode) => (
+          <div key={episode.episode}>
+            <p>{episode.title}</p>
+          </div>
+        ))}
+      </div>
 
       {selectedSeason && (
         <div className="episodes">
