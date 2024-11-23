@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "../pages/ShowDetail.css";
 
 function ShowDetail() {
@@ -8,6 +8,7 @@ function ShowDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedSeason, setSelectSeason] = useState(null); //NOTE TO SELF :: should this be 1?
+  const backNav = useNavigate();
 
   useEffect(() => {
     const apiUrl = `https://podcast-api.netlify.app/id/${id}`;
@@ -43,6 +44,9 @@ function ShowDetail() {
 
   return (
     <div className="show">
+      <button className="back-button" onClick={() => backNav(-1)}>
+        ← Back
+      </button>
       <h1>{podcast.title}</h1>
       <img
         src={podcast.image}

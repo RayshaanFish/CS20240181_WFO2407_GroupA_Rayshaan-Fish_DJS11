@@ -35,7 +35,7 @@ css Copy code .show {
 }
 
 .podcast-detail-image {
-  max-width: 100%;
+  max-width: 15%;
   height: auto;
   margin: 1rem 0;
 }
@@ -67,4 +67,21 @@ css Copy code .show {
 .episode-card audio {
   width: 100%;
   margin-top: 1rem;
+}
+
+.back-button {
+  display: inline-block;
+  background: #007bff;
+  color: #fff;
+  padding: 10px 15px;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.back-button:hover {
+  background: #0056b3;
 }
