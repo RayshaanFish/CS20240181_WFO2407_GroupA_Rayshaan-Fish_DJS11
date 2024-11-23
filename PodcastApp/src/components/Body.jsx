@@ -17,7 +17,11 @@ function Body() {
         return response.json();
       })
       .then((data) => {
-        setPodcasts(data);
+        // sort alphabetically by default
+        const sortPodcasts = data.sort((a, b) =>
+          a.title.localeCompare(b.title)
+        );
+        setPodcasts(sortPodcasts);
         setLoading(false);
       })
       .catch((err) => {
