@@ -33,6 +33,7 @@ function ShowDetail() {
       });
   }, [id]);
 
+  //   season dropdown
   const chooseSeason = (event) => {
     const seasonNumber = parseInt(event.target.value, 10);
     const selected = podcast.seasons.find(
@@ -43,6 +44,13 @@ function ShowDetail() {
 
   if (loading) return <p>Loading podcast details...</p>;
   if (error) return <p>Error: {error}</p>;
+
+  //   Format Date
+
+  const formatDate = (isoDate) => {
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return new Date(isoDate).toLocaleDateString(undefined, options);
+  };
 
   return (
     <div className="show">
@@ -72,7 +80,7 @@ function ShowDetail() {
       </select>
 
       <p>
-        <strong>Last Updated:</strong> {podcast.updated}
+        <strong>Last Updated:</strong> {formatDate(podcast.updated)}
       </p>
 
       {/* Season + Episode count */}
