@@ -24,11 +24,13 @@ function Body() {
         <div className="podcast-grid">
           {podcasts.map((podcast, index) => (
             <div key={index} className="podcast-card">
-              <img
-                src={podcast.image}
-                alt={podcast.title}
-                className="podcast-image"
-              />
+              <Link to={`/show/${podcast.id}`}>
+                <img
+                  src={podcast.image}
+                  alt={podcast.title}
+                  className="podcast-image"
+                />
+              </Link>
               <p>
                 <Link to={`/show/${podcast.id}`} className="podcast-title">
                   {podcast.title}
