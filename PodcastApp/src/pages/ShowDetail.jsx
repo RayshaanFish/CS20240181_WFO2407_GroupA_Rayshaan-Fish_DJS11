@@ -7,10 +7,10 @@ function ShowDetail() {
   const [podcast, setPodcast] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedSeason, setSelectSeason] = useState(null); //NOTE TO SELF :: should this be 1?
+  const [selectedSeason, setSelectSeason] = useState(null);
   const backNav = useNavigate();
 
-  //   Fetching show details
+  // Fetching show details
   useEffect(() => {
     const apiUrl = `https://podcast-api.netlify.app/id/${id}`;
 
@@ -24,7 +24,7 @@ function ShowDetail() {
       .then((data) => {
         setPodcast(data);
         if (data.seasons.length > 0) {
-          setSelectSeason(data.seasons[0]); //first season default
+          setSelectSeason(data.seasons[0]); // First season as default
         }
         setLoading(false);
       })
@@ -34,7 +34,7 @@ function ShowDetail() {
       });
   }, [id]);
 
-  //   season dropdown
+  // Season dropdown
   const chooseSeason = (event) => {
     const seasonNumber = parseInt(event.target.value, 10);
     const selected = podcast.seasons.find(
@@ -46,11 +46,14 @@ function ShowDetail() {
   if (loading) return <p>Loading podcast details...</p>;
   if (error) return <p>Error: {error}</p>;
 
-  //   Format Date
+  // Format Date
   const formatDate = (isoDate) => {
     const options = { year: "numeric", month: "long", day: "numeric" };
     return new Date(isoDate).toLocaleDateString(undefined, options);
   };
+
+  // Determine which image to show (default or season-specific)
+  const showImage = selectedSeason?.image || podcast.image;
 
   return (
     <div className="show">
@@ -58,14 +61,16 @@ function ShowDetail() {
         ← Back
       </button>
       <h1>{podcast.title}</h1>
+
+      {/* Display the image: either the season's or the default podcast image */}
       <img
-        src={podcast.image}
+        src={showImage}
         alt={podcast.title}
         className="podcast-detail-image"
       />
       <p>{podcast.description}</p>
 
-      {/* season drop down */}
+      {/* Season dropdown */}
       <label htmlFor="season-select">Select Season: </label>
       <select
         id="season-select"
@@ -94,7 +99,7 @@ function ShowDetail() {
         </p>
       </div>
 
-      {/* Episode list - NOTE TO SELF not sure if I want this */}
+      {/* Episode list */}
       <div className="episodes-list">
         <h2>{selectedSeason.title}</h2>
         {selectedSeason.episodes.map((episode) => (
