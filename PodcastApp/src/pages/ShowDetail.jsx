@@ -142,8 +142,15 @@ function ShowDetail() {
                 <source src={episode.file} type="audio/mpeg" />
                 Your browser does not support the audio element.
               </audio>
-              <button onClick={() => toggleFavorite(episode)}>
-                {isFavourite ? "Unfavourite" : "Favourite"}
+              <button
+                onClick={() => toggleFavorite(episode)}
+                className="favorite-btn"
+              >
+                {isFavourite ? (
+                  <i className="fas fa-heart" style={{ color: "red" }}></i> // Filled heart, colored red
+                ) : (
+                  <i className="far fa-heart" style={{ color: "gray" }}></i> // Empty heart
+                )}
               </button>
             </div>
           );

@@ -85,3 +85,14 @@ css Copy code .show {
 .back-button:hover {
   background: #0056b3;
 }
+.favorite-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  margin-top: 5px;
+}
+
+.favorite-btn:focus {
+  outline: none;
+}
