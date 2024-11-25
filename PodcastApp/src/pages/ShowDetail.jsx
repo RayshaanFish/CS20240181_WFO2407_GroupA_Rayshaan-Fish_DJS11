@@ -9,6 +9,7 @@ function ShowDetail() {
   const [error, setError] = useState(null);
   const [selectedSeason, setSelectSeason] = useState(null);
   const backNav = useNavigate();
+  const [favourites, setFavourites] = useState([]);
 
   // Fetching show details
   useEffect(() => {
@@ -34,6 +35,20 @@ function ShowDetail() {
       });
   }, [id]);
 
+  // Load favs from local storeage
+
+  useEffect(() => {
+    const storedFavourites = localStorage.getItem("favourites");
+    if (storedFavourites) {
+      setFavourites(JSON.parse(storedFavourites));
+    }
+  }, []);
+
+  //   save favs to local storage
+  useEffect(() => {
+    localStorage.setItem("favourites", JSON.stringify("favourites"));
+  }, [favourites]);
+
   // Season dropdown
   const chooseSeason = (event) => {
     const seasonNumber = parseInt(event.target.value, 10);
@@ -41,6 +56,17 @@ function ShowDetail() {
       (season) => season.season === seasonNumber
     );
     setSelectSeason(selected);
+  };
+
+  //   toggle fav status per episode
+  const toggleFavorite = (episode) => {
+    const episodeIdentifier = `${podcast.id}-season-${selectedSeason.season}-episode-${episode.episode}`;
+    setFavourites(
+      (prevFavourites) =>
+        prevFavourites.includes(episodeIdentifier)
+          ? prevFavourites.filter((fav) => fav !== episodeIdentifier) // Remove if already a favorite
+          : [...prevFavourites, episodeIdentifier] // Add to favorites
+    );
   };
 
   if (loading) return <p>Loading podcast details...</p>;
@@ -102,18 +128,12 @@ function ShowDetail() {
       {/* Episode list */}
       <div className="episodes-list">
         <h2>{selectedSeason.title}</h2>
-        {selectedSeason.episodes.map((episode) => (
-          <div key={episode.episode}>
-            <p>{episode.title}</p>
-          </div>
-        ))}
-      </div>
+        {selectedSeason.episodes.map((episode) => {
+          const episodeIdentifier = `${podcast.id}-season-${selectedSeason.season}-episode-${episode.episode}`;
+          const isFavourite = favourites.includes(episodeIdentifier);
 
-      {selectedSeason && (
-        <div className="episodes">
-          <h2>{selectedSeason.title}</h2>
-          {selectedSeason.episodes.map((episode, index) => (
-            <div key={index} className="episode-card">
+          return (
+            <div key={episode.episode} className="episode-card">
               <h3>
                 Episode {episode.episode}: {episode.title}
               </h3>
@@ -122,10 +142,13 @@ function ShowDetail() {
                 <source src={episode.file} type="audio/mpeg" />
                 Your browser does not support the audio element.
               </audio>
+              <button onClick={() => toggleFavorite(episode)}>
+                {isFavourite ? "Unfavourite" : "Favourite"}
+              </button>
             </div>
-          ))}
-        </div>
-      )}
+          );
+        })}
+      </div>
     </div>
   );
 }
