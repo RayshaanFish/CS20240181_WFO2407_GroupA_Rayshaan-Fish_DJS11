@@ -5,11 +5,13 @@ import "../pages/ShowDetail.css";
 function ShowDetail() {
   const { id } = useParams();
   const [podcast, setPodcast] = useState(null);
+  const [genres, setGenre] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedSeason, setSelectSeason] = useState(null); //NOTE TO SELF :: should this be 1?
   const backNav = useNavigate();
 
+  //   Fetching show details
   useEffect(() => {
     const apiUrl = `https://podcast-api.netlify.app/id/${id}`;
 
@@ -21,10 +23,31 @@ function ShowDetail() {
         return response.json();
       })
       .then((data) => {
+        console.log("Podcast Data:", data);
+        console.log("Genre ID:", data.genres);
         setPodcast(data);
         if (data.seasons.length > 0) {
           setSelectSeason(data.seasons[0]); //first season default
         }
+
+        // fetching Genre
+
+        const genreFetches = data.genres.map((genreId) =>
+          fetch(`https://podcast-api.netlify.app/genre/${genreId}`).then(
+            (res) => res.json
+          )
+        );
+
+        // Resolve all fetches
+        Promise.all(genreFetches)
+          .then((fetchedGenres) => {
+            console.log("");
+            setGenre(fetchedGenres);
+          })
+          .catch((err) => {
+            console.error("Error fetching genres:", err);
+          });
+
         setLoading(false);
       })
       .catch((err) => {
@@ -46,7 +69,6 @@ function ShowDetail() {
   if (error) return <p>Error: {error}</p>;
 
   //   Format Date
-
   const formatDate = (isoDate) => {
     const options = { year: "numeric", month: "long", day: "numeric" };
     return new Date(isoDate).toLocaleDateString(undefined, options);
@@ -64,6 +86,18 @@ function ShowDetail() {
         className="podcast-detail-image"
       />
       <p>{podcast.description}</p>
+
+      {/* Genre Title */}
+      {genres.length > 0 && (
+        <div>
+          <h3>Genres:</h3>
+          <ul>
+            {genres.map((genre, index) => (
+              <li key={index}>{genre.title}</li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* season drop down */}
       <label htmlFor="season-select">Select Season: </label>
