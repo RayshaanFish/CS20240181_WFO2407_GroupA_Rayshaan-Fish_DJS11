@@ -20,24 +20,45 @@ function Favourites() {
     );
   }
 
+  // Group favourites by show and season
+  const groupedFavourites = favourites.reduce((acc, fav) => {
+    const { showTitle, seasonTitle } = fav;
+    if (!acc[showTitle]) {
+      acc[showTitle] = {};
+    }
+    if (!acc[showTitle][seasonTitle]) {
+      acc[showTitle][seasonTitle] = [];
+    }
+    acc[showTitle][seasonTitle].push(fav);
+    return acc;
+  }, {});
+
   return (
     <div>
       <h1>Favourites</h1>
-      <ul>
-        {favourites.map((fav, index) => (
-          <li key={index}>
-            <p>
-              <strong>Episode:</strong> {fav.episodeTitle}
-            </p>
-            <p>
-              <strong>Show:</strong> {fav.showTitle}
-            </p>
-            <p>
-              <strong>Season:</strong> {fav.seasonTitle}
-            </p>
-          </li>
-        ))}
-      </ul>
+      {Object.entries(groupedFavourites).map(([show, seasons]) => (
+        <div key={show} className="favourites-show">
+          <h2>Show: "{show}"</h2>
+          {Object.entries(seasons).map(([season, episodes]) => (
+            <div key={season} className="favourites-season">
+              <h3>
+                {" "}
+                {season.includes("Season") ? season : `Season ${season}`}
+              </h3>
+              <ul>
+                {episodes.map((episode, index) => (
+                  <li key={index}>
+                    <p>
+                      Episode {episode.id.split("-episode-")[1]}: "
+                      {episode.episodeTitle}"
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      ))}
     </div>
   );
 }
