@@ -12,6 +12,7 @@ import Header from "./components/Header";
 import Body from "./components/Body";
 import Footer from "./components/Footer";
 import ShowDetail from "./pages/ShowDetail";
+import Favourites from "./pages/Favourites";
 
 function App() {
   return (
@@ -24,10 +25,7 @@ function App() {
               {/* Routes for different pages */}
               <Route path="/" element={<Body />} />
               <Route path="/show/:id" element={<ShowDetail />} />
-              <Route
-                path="/search"
-                element={<p>Still need to add this Page [SEARCH]</p>}
-              />
+              <Route path="/favourites" element={<Favourites />} />
             </Routes>
           </body>
           <Footer />

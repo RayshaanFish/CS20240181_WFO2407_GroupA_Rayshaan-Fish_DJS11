@@ -85,7 +85,7 @@ css Copy code .show {
 .back-button:hover {
   background: #0056b3;
 }
-.favorite-btn {
+.favourite-btn {
   background: none;
   border: none;
   cursor: pointer;
@@ -93,6 +93,6 @@ css Copy code .show {
   margin-top: 5px;
 }
 
-.favorite-btn:focus {
+.favourite-btn:focus {
   outline: none;
 }
