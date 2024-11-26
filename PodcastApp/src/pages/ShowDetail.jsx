@@ -9,14 +9,21 @@ function ShowDetail() {
   const [error, setError] = useState(null);
   const [selectedSeason, setSelectSeason] = useState(null);
   const backNav = useNavigate();
-  const [favourites, setFavourites] = useState([]);
 
-  //   load favs from localStorgae
+  const [favourites, setFavourites] = useState(() => {
+    try {
+      const storedFavourites = localStorage.getItem("favourites");
+      return storedFavourites ? JSON.parse(storedFavourites) : [];
+    } catch (error) {
+      console.error("Failed to parse favourites from localStorage:", error);
+      return [];
+    }
+  });
+
+  // Save favourites to localStorage when updated
   useEffect(() => {
-    const storedFavourites =
-      JSON.parse(localStorage.getItem("favourites")) || [];
-    setFavourites(storedFavourites);
-  }, []);
+    localStorage.setItem("favourites", JSON.stringify(favourites));
+  }, [favourites]);
 
   //   saving favs to localStorgae when changed
   useEffect(() => {
@@ -67,12 +74,18 @@ function ShowDetail() {
       seasonTitle: selectedSeason.title,
     };
 
-    setFavourites(
-      (prevFavourites) =>
-        prevFavourites.some((fav) => fav.id === episodeIdentifier)
-          ? prevFavourites.filter((fav) => fav.id !== episodeIdentifier) // Remove from favorites
-          : [...prevFavourites, newFavourite] // Add to favorites
-    );
+    setFavourites((prevFavourites) => {
+      const isAlreadyFavourite = prevFavourites.some(
+        (fav) => fav.id === episodeIdentifier
+      );
+      if (isAlreadyFavourite) {
+        // Remove from favourites
+        return prevFavourites.filter((fav) => fav.id !== episodeIdentifier);
+      } else {
+        // Add to favourites
+        return [...prevFavourites, newFavourite];
+      }
+    });
   };
   if (loading) return <p>Loading podcast details...</p>;
   if (error) return <p>Error: {error}</p>;
