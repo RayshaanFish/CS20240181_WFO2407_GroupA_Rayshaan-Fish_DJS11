@@ -11,6 +11,18 @@ function ShowDetail() {
   const backNav = useNavigate();
   const [favourites, setFavourites] = useState([]);
 
+  //   load favs from localStorgae
+  useEffect(() => {
+    const storedFavourites =
+      JSON.parse(localStorage.getItem("favourites")) || [];
+    setFavourites(storedFavourites);
+  }, []);
+
+  //   saving favs to localStorgae when changed
+  useEffect(() => {
+    localStorage.setItem("favourites", JSON.stringify(favourites));
+  }, [favourites]);
+
   // Fetching show details
   useEffect(() => {
     const apiUrl = `https://podcast-api.netlify.app/id/${id}`;
@@ -35,20 +47,6 @@ function ShowDetail() {
       });
   }, [id]);
 
-  // Load favs from local storeage
-
-  useEffect(() => {
-    const storedFavourites = localStorage.getItem("favourites");
-    if (storedFavourites) {
-      setFavourites(JSON.parse(storedFavourites));
-    }
-  }, []);
-
-  //   save favs to local storage
-  useEffect(() => {
-    localStorage.setItem("favourites", JSON.stringify("favourites"));
-  }, [favourites]);
-
   // Season dropdown
   const chooseSeason = (event) => {
     const seasonNumber = parseInt(event.target.value, 10);
@@ -61,14 +59,21 @@ function ShowDetail() {
   //   toggle fav status per episode
   const toggleFavorite = (episode) => {
     const episodeIdentifier = `${podcast.id}-season-${selectedSeason.season}-episode-${episode.episode}`;
+
+    const newFavourite = {
+      id: episodeIdentifier,
+      episodeTitle: episode.title,
+      showTitle: podcast.title,
+      seasonTitle: selectedSeason.title,
+    };
+
     setFavourites(
       (prevFavourites) =>
-        prevFavourites.includes(episodeIdentifier)
-          ? prevFavourites.filter((fav) => fav !== episodeIdentifier) // Remove if already a favorite
-          : [...prevFavourites, episodeIdentifier] // Add to favorites
+        prevFavourites.some((fav) => fav.id === episodeIdentifier)
+          ? prevFavourites.filter((fav) => fav.id !== episodeIdentifier) // Remove from favorites
+          : [...prevFavourites, newFavourite] // Add to favorites
     );
   };
-
   if (loading) return <p>Loading podcast details...</p>;
   if (error) return <p>Error: {error}</p>;
 
@@ -130,7 +135,9 @@ function ShowDetail() {
         <h2>{selectedSeason.title}</h2>
         {selectedSeason.episodes.map((episode) => {
           const episodeIdentifier = `${podcast.id}-season-${selectedSeason.season}-episode-${episode.episode}`;
-          const isFavourite = favourites.includes(episodeIdentifier);
+          const isFavourite = favourites.some(
+            (fav) => fav.id === episodeIdentifier
+          );
 
           return (
             <div key={episode.episode} className="episode-card">
