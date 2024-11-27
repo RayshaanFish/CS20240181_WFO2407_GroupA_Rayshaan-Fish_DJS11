@@ -72,6 +72,7 @@ function ShowDetail() {
       episodeTitle: episode.title,
       showTitle: podcast.title,
       seasonTitle: selectedSeason.title,
+      addedOn: new Date().toISOString(),
     };
 
     setFavourites((prevFavourites) => {
