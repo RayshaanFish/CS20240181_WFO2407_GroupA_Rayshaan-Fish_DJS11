@@ -11,8 +11,8 @@ function Favourites() {
     setFavourites(storedFavourites);
   }, []);
 
-  //   remove favourtie from episode list in favourites
-  const removeFavourite = (episodeId) => {
+  //   toggle favourite status
+  const toggleFavourite = (episodeId) => {
     const updatedFavourites = favourites.filter((fav) => fav.id !== episodeId);
     setFavourites(updatedFavourites);
     localStorage.setItem("favourites", JSON.stringify(updatedFavourites));
@@ -61,10 +61,14 @@ function Favourites() {
                     </p>
                     {/* Remove Fav button */}
                     <button
-                      onClick={() => removeFavourite(episode.id)}
-                      className="remove-btn"
+                      onClick={() => toggleFavourite(episode.id)}
+                      className="toggle-fav-btn"
+                      aria-label="Toggle Favourite"
                     >
-                      Remove from Favourties
+                      <i
+                        className="fas fa-heart"
+                        style={{ color: "red", cursor: "pointer" }}
+                      ></i>
                     </button>
                   </li>
                 ))}
