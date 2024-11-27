@@ -40,9 +40,14 @@ function Body() {
     const sortedPodcasts = [...podcasts].sort((a, b) => {
       if (order === "A-Z") {
         return a.title.localeCompare(b.title);
-      } else {
+      } else if (order === "Z-A") {
         return b.title.localeCompare(a.title);
+      } else if (order === "Newly Updated") {
+        return new Date(b.updated) - new Date(a.updated);
+      } else if (order === "Oldest Updated") {
+        return new Date(a.updated) - new Date(b.updated);
       }
+      return 0; // Default fallback
     });
     setPodcasts(sortedPodcasts);
   };
@@ -62,6 +67,7 @@ function Body() {
       </div>
     );
   }
+
   return (
     <div className="body">
       <div>
@@ -73,6 +79,8 @@ function Body() {
         >
           <option value="A-Z">A-Z</option>
           <option value="Z-A">Z-A</option>
+          <option value="Newly Updated">Newly Updated</option>
+          <option value="Oldest Updated">Oldest Updated</option>
         </select>
       </div>
       <h2>Podcasts</h2>
@@ -94,6 +102,9 @@ function Body() {
                 <Link to={`/show/${podcast.id}`} className="podcast-title">
                   {podcast.title}
                 </Link>
+              </p>
+              <p className="podcast-updated">
+                Last Updated: {new Date(podcast.updated).toLocaleDateString()}
               </p>
             </div>
           ))}
