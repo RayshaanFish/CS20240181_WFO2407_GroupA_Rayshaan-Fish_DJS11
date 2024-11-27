@@ -7,6 +7,7 @@ function Body() {
   const [podcasts, setPodcasts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [sortOrder, setSortOrder] = useState("A-Z");
 
   useEffect(() => {
     fetch("https://podcast-api.netlify.app")
@@ -30,6 +31,22 @@ function Body() {
       });
   }, []);
 
+  // Function to handle sort order changes:
+  const manageSortOrderChange = (event) => {
+    const order = event.target.value;
+    setSortOrder(order);
+
+    // Sort podcasts based on the selected order:
+    const sortedPodcasts = [...podcasts].sort((a, b) => {
+      if (order === "A-Z") {
+        return a.title.localeCompare(b.title);
+      } else {
+        return b.title.localeCompare(a.title);
+      }
+    });
+    setPodcasts(sortedPodcasts);
+  };
+
   if (loading) {
     return (
       <div className="body">
@@ -47,7 +64,21 @@ function Body() {
   }
   return (
     <div className="body">
+      <div>
+        <label htmlFor="sort-order">Sort by: </label>
+        <select
+          id="sort-order"
+          value={sortOrder}
+          onChange={manageSortOrderChange}
+        >
+          <option value="A-Z">A-Z</option>
+          <option value="Z-A">Z-A</option>
+        </select>
+      </div>
       <h2>Podcasts</h2>
+
+      {/* Sorting dropdown */}
+
       {podcasts.length > 0 ? (
         <div className="podcast-grid">
           {podcasts.map((podcast, index) => (

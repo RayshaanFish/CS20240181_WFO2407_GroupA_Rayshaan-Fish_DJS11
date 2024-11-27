@@ -8,6 +8,8 @@ function ShowDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedSeason, setSelectSeason] = useState(null);
+  const [sortorder, setSortOrder] = useState("A-Z");
+
   const backNav = useNavigate();
 
   const [favourites, setFavourites] = useState(() => {
@@ -21,11 +23,6 @@ function ShowDetail() {
   });
 
   // Save favourites to localStorage when updated
-  useEffect(() => {
-    localStorage.setItem("favourites", JSON.stringify(favourites));
-  }, [favourites]);
-
-  //   saving favs to localStorgae when changed
   useEffect(() => {
     localStorage.setItem("favourites", JSON.stringify(favourites));
   }, [favourites]);
