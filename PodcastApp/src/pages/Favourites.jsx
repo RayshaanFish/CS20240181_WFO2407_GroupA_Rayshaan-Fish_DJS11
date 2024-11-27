@@ -11,6 +11,13 @@ function Favourites() {
     setFavourites(storedFavourites);
   }, []);
 
+  //   remove favourtie from episode list in favourites
+  const removeFavourite = (episodeId) => {
+    const updatedFavourites = favourites.filter((fav) => fav.id !== episodeId);
+    setFavourites(updatedFavourites);
+    localStorage.setItem("favourites", JSON.stringify(updatedFavourites));
+  };
+
   if (favourites.length === 0) {
     return (
       <div>
@@ -52,6 +59,13 @@ function Favourites() {
                       Episode {episode.id.split("-episode-")[1]}: "
                       {episode.episodeTitle}"
                     </p>
+                    {/* Remove Fav button */}
+                    <button
+                      onClick={() => removeFavourite(episode.id)}
+                      className="remove-btn"
+                    >
+                      Remove from Favourties
+                    </button>
                   </li>
                 ))}
               </ul>
