@@ -8,7 +8,7 @@ function ShowDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedSeason, setSelectSeason] = useState(null);
-  const [sortorder, setSortOrder] = useState("A-Z");
+  const [currentAudio, setCurrentAudio] = useState(null);
 
   const backNav = useNavigate();
 
@@ -85,6 +85,14 @@ function ShowDetail() {
       }
     });
   };
+
+  const playAudio = (episode) => {
+    setCurrentAudio({
+      title: episode.title,
+      url: episode.file, // Assuming episode.file contains the audio URL
+    });
+  };
+
   if (loading) return <p>Loading podcast details...</p>;
   if (error) return <p>Error: {error}</p>;
 
@@ -156,10 +164,7 @@ function ShowDetail() {
                 Episode {episode.episode}: {episode.title}
               </h3>
               <p>{episode.description}</p>
-              <audio controls>
-                <source src={episode.file} type="audio/mpeg" />
-                Your browser does not support the audio element.
-              </audio>
+              <button onClick={() => playAudio(episode)}>Play Episode</button>
               <button
                 onClick={() => toggleFavorite(episode)}
                 className="favorite-btn"
@@ -174,6 +179,16 @@ function ShowDetail() {
           );
         })}
       </div>
+      {/* Audio Player */}
+      {currentAudio && (
+        <div className="audio-player">
+          <h3>Now Playing: {currentAudio.title}</h3>
+          <audio controls autoPlay>
+            <source src={currentAudio.file} type="audio/mpeg" />
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+      )}
     </div>
   );
 }
