@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "../pages/ShowDetail.css";
+import AudioPlayer from "../components/AudioPlayer";
 
 function ShowDetail() {
   const { id } = useParams();
@@ -8,7 +9,7 @@ function ShowDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedSeason, setSelectSeason] = useState(null);
-  const [currentAudio, setCurrentAudio] = useState(null);
+  const [selectedEpisodeUrl, setSelectedEpisodeUrl] = useState(null);
 
   const backNav = useNavigate();
 
@@ -89,7 +90,7 @@ function ShowDetail() {
   const playAudio = (episode) => {
     setCurrentAudio({
       title: episode.title,
-      url: episode.file, // Assuming episode.file contains the audio URL
+      url: episode.file,
     });
   };
 
@@ -111,7 +112,6 @@ function ShowDetail() {
         ← Back
       </button>
       <h1>{podcast.title}</h1>
-
       {/* Display the image: either the season's or the default podcast image */}
       <img
         src={showImage}
@@ -119,7 +119,6 @@ function ShowDetail() {
         className="podcast-detail-image"
       />
       <p>{podcast.description}</p>
-
       {/* Season dropdown */}
       <label htmlFor="season-select">Select Season: </label>
       <select
@@ -133,11 +132,9 @@ function ShowDetail() {
           </option>
         ))}
       </select>
-
       <p>
         <strong>Last Updated:</strong> {formatDate(podcast.updated)}
       </p>
-
       {/* Season + Episode count */}
       <div className="season-info">
         <p>
@@ -148,7 +145,6 @@ function ShowDetail() {
           {selectedSeason ? selectedSeason.episodes.length : 0}
         </p>
       </div>
-
       {/* Episode list */}
       <div className="episodes-list">
         <h2>{selectedSeason.title}</h2>
@@ -164,7 +160,13 @@ function ShowDetail() {
                 Episode {episode.episode}: {episode.title}
               </h3>
               <p>{episode.description}</p>
-              <button onClick={() => playAudio(episode)}>Play Episode</button>
+              <button
+                onClick={() => {
+                  setSelectedEpisodeUrl(episode.file);
+                }}
+              >
+                Play
+              </button>
               <button
                 onClick={() => toggleFavorite(episode)}
                 className="favorite-btn"
@@ -179,16 +181,7 @@ function ShowDetail() {
           );
         })}
       </div>
-      {/* Audio Player */}
-      {currentAudio && (
-        <div className="audio-player">
-          <h3>Now Playing: {currentAudio.title}</h3>
-          <audio controls autoPlay>
-            <source src={currentAudio.file} type="audio/mpeg" />
-            Your browser does not support the audio element.
-          </audio>
-        </div>
-      )}
+      <AudioPlayer audioSrc={selectedEpisodeUrl} /> )}
     </div>
   );
 }
